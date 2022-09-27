@@ -1,4 +1,6 @@
-cp_hifigan/*
+checkpoints/*
 output/*
 dataset/*
 pretrained
+__pycache__
+test_files

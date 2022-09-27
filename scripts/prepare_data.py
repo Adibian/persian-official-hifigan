@@ -5,13 +5,14 @@ import argparse
 
 current_path = os.getcwd()
 
-def get_all_uttr_name(read_path):
+def get_all_uttr_name(read_path, sub_dir=''):
     utterances_name = []
-    for f in os.listdir(read_path):
-        if os.path.isfile(os.path.join(read_path, f)):
-            utterances_name.append(f[:f.rfind('.')]+'|\n')
-        elif os.path.isdir(os.path.join(read_path, f)):
-            utterances_name.extend(get_all_uttr_name(os.path.join(read_path, f)))
+    for d in ('train_wav', 'test_wav'):
+        path = os.path.join(read_path, d)
+        for f in os.listdir(path):
+            if os.path.isfile(os.path.join(path, f)):
+                utter_name = f[:f.rfind('.')]+'|\n'
+                utterances_name.append(str(os.path.join(d, utter_name)))                
     return utterances_name
     
 def split_train_val(utterances_name, val_size):
@@ -38,7 +39,7 @@ def write_uttr_name(wav_path, save_path, train_uttrs, val_uttrs):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_wavs_path', default=os.path.join(current_path, 'wavs'), help="path to wav files")
+    parser.add_argument('--input_wavs_path', required=True, help="path to wav files")
     parser.add_argument('--output_path', default=os.path.join(current_path, os.pardir, 'dataset'), help="path to saved data")
     parser.add_argument('--val_size', default=100, help="number of validation wav")
     args = parser.parse_args()
@@ -52,5 +53,6 @@ def main():
     print("data is saved.")
 
 if __name__ == '__main__':
-    # python scripts/prepare_data.py --input_wavs_path "/content/drive/MyDrive/Projects/TTS/multi speaker/main_files/processed_data/train_wav" --output_path "dataset" --val_size 100
+    # python prepare_data.py --input_wavs_path "/mnt/hdd1/adibian/multispeaker_data" --output_path "../dataset" --val_size 100
     main()
+
