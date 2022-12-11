@@ -58,7 +58,7 @@ def inference(a):
             audio = audio.cpu().numpy().astype('int16')
 
             output_file = os.path.join(a.output_dir, os.path.splitext(filname)[0] + '_generated.wav')
-            write(output_file, h.sampling_rate, audio)
+            write(output_file, h.sr_for_save, audio)
             print(output_file)
 
 
@@ -69,6 +69,7 @@ def main():
     parser.add_argument('--input_wavs_dir', default='test_files')
     parser.add_argument('--output_dir', default='generated_files')
     parser.add_argument('--checkpoint_file', required=True)
+    parser.add_argument('--sr_for_save', default=0)
     a = parser.parse_args()
 
     config_file = os.path.join(os.path.split(a.checkpoint_file)[0], 'config.json')
@@ -78,7 +79,11 @@ def main():
     global h
     json_config = json.loads(data)
     h = AttrDict(json_config)
-
+    if a.sr_for_save != 0:
+        h.sr_for_save = int(a.sr_for_save)
+    else:
+        h.sr_for_save = h.sampling_rate
+    print(h.sr_for_save)
     torch.manual_seed(h.seed)
     global device
     if torch.cuda.is_available():

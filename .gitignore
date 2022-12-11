@@ -1,6 +1,13 @@
 checkpoints/*
+reserved_trained_model/*
 output/*
 dataset/*
 pretrained
 __pycache__
-test_files
+
+ft_dataset/*
+ft_checkpoints/*
+
+commands.txt
+results/*
+sample_mel/*
